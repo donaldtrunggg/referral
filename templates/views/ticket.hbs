@@ -1,0 +1,12 @@
+<div class="container">
+	<h2>Tickets</h2>
+	<div class="list-group">
+		{{#each data.tickets}}
+			<a href="#" class="list-group-item">
+				<h4 class="list-group-item-heading">{{ title }}</h4>
+				<p class="list-group-item-text">{{ description }}</p>
+				<p>{{date}}</p>
+			</a>
+		{{/each}}
+	</div>
+</div>
