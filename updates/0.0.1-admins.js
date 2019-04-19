@@ -13,7 +13,7 @@ exports.create = {
 	],
 };
 
-/*
+
 
 // This is the long-hand version of the functionality above:
 
@@ -46,4 +46,4 @@ exports = module.exports = function (done) {
 	async.forEach(admins, createAdmin, done);
 };
 
-*/
+
