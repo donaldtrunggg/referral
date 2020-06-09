@@ -104,7 +104,7 @@ jobs:
           application_name: 'SG Care'
           environment_name: 'SgCares-staging'
           region: 'ap-southeast-1'
-          version_label: "sgcare-${{ steps.format-time.outputs.replaced }}" // Using timestamp create on step #
+#          version_label: "sgcare-${{ steps.format-time.outputs.replaced }}" // Using timestamp create on step #
           deployment_package: deploy.zip
             #          env:
             #            AWS_S3_BUCKET: ${{ secrets.STAGING_AWS_S3_BUCKET }}
@@ -118,7 +118,7 @@ jobs:
           application_name: 'SG Care'
           environment_name: 'SgCares-production'
           region: 'ap-southeast-1'
-          version_label: "sgcare-${{ steps.format-time.outputs.replaced }}" // Using timestamp create on step #
+#          version_label: "sgcare-${{ steps.format-time.outputs.replaced }}" // Using timestamp create on step #
           deployment_package: deploy.zip
 
       - name: Deployed successfully!
