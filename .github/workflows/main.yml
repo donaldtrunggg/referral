@@ -49,7 +49,7 @@ jobs:
         with:
           name: deploy_file
           path: deploy.zip
-  
+
   publish_staging:
     needs: [build]
     strategy:
@@ -75,6 +75,23 @@ jobs:
           region: 'ap-southeast-1'
           deployment_package: deploy.zip
 
+      - name: Deployed staging successfully!
+        run: echo App deployed to ELB staging
+        
+  publish_production:
+    needs: [build]
+    strategy:
+      matrix:
+        node-version: [8]
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Download math result for job 2
+        uses: actions/download-artifact@v1
+        with:
+          name: deploy_file
+
       - name: Deploy production
         if: github.ref == 'refs/heads/master'
         uses: einaregilsson/beanstalk-deploy@v4
@@ -86,5 +103,5 @@ jobs:
           region: 'ap-southeast-1'
           deployment_package: deploy.zip
 
-      - name: Deployed successfully!
-        run: echo App deployed to ELB
+      - name: Deployed production successfully!
+        run: echo App deployed to ELB production
