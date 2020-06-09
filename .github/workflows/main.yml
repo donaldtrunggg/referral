@@ -75,17 +75,6 @@ jobs:
           region: 'ap-southeast-1'
           deployment_package: files/deploy.zip
 
-      - name: Deploy staging
-          if: github.ref == 'refs/heads/develop'
-          uses: einaregilsson/beanstalk-deploy@v4
-          with:
-            aws_access_key: ${{secrets.STAGING_AWS_ACCESS_KEY}}
-            aws_secret_key: ${{secrets.STAGING_AWS_SECRET_KEY}}
-            application_name: 'SG Care'
-            environment_name: 'SgCares-staging'
-            region: 'ap-southeast-1'
-            deployment_package: files/deploy.zip
-
       - name: Deployed staging successfully!
         run: echo App deployed to ELB staging
 
