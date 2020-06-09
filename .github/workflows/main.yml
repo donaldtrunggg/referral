@@ -50,7 +50,7 @@ jobs:
           name: deploy_file
           path: deploy.zip
 
-  publish_staging:
+  publish:
     needs: [build]
     strategy:
       matrix:
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Download math result for job 2
+      - name: Download file from step building
         uses: actions/download-artifact@v1
         with:
           name: deploy_file
@@ -75,33 +75,16 @@ jobs:
           region: 'ap-southeast-1'
           deployment_package: deploy.zip
 
-      - name: Deployed staging successfully!
-        run: echo App deployed to ELB staging
-        
-  publish_production:
-    needs: [build]
-    strategy:
-      matrix:
-        node-version: [8]
-
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - name: Download math result for job 2
-        uses: actions/download-artifact@v1
-        with:
-          name: deploy_file
-
       - name: Deploy production
-        if: github.ref == 'refs/heads/master'
-        uses: einaregilsson/beanstalk-deploy@v4
-        with:
-          aws_access_key: ${{secrets.PROD_AWS_ACCESS_KEY}}
-          aws_secret_key: ${{secrets.PROD_AWS_SECRET_KEY}}
-          application_name: 'SG Care'
-          environment_name: 'SgCares-production'
-          region: 'ap-southeast-1'
-          deployment_package: deploy.zip
+          if: github.ref == 'refs/heads/master'
+          uses: einaregilsson/beanstalk-deploy@v4
+          with:
+            aws_access_key: ${{secrets.PROD_AWS_ACCESS_KEY}}
+            aws_secret_key: ${{secrets.PROD_AWS_SECRET_KEY}}
+            application_name: 'SG Care'
+            environment_name: 'SgCares-production'
+            region: 'ap-southeast-1'
+            deployment_package: deploy.zip
 
-      - name: Deployed production successfully!
-        run: echo App deployed to ELB production
+      - name: Deployed successfully!
+        run: echo App deployed to ELB
