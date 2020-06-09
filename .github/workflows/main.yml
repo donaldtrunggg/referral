@@ -122,7 +122,7 @@ jobs:
           deployment_package: deploy.zip
 
       - name: Deployed successfully!
-          run: echo App deployed to ELB
+        run: echo App deployed to ELB
     # Steps represent a sequence of tasks that will be executed as part of the job
 #    steps:
 #      # Configures the node version used on GitHub-hosted runners
