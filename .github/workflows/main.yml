@@ -6,9 +6,9 @@ name: CI
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [ master, develop ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, develop ]
 
 jobs:
   build:
@@ -76,15 +76,15 @@ jobs:
           deployment_package: deploy.zip
 
       - name: Deploy production
-          if: github.ref == 'refs/heads/master'
-          uses: einaregilsson/beanstalk-deploy@v4
-          with:
-            aws_access_key: ${{secrets.PROD_AWS_ACCESS_KEY}}
-            aws_secret_key: ${{secrets.PROD_AWS_SECRET_KEY}}
-            application_name: 'SG Care'
-            environment_name: 'SgCares-production'
-            region: 'ap-southeast-1'
-            deployment_package: deploy.zip
+        if: github.ref == 'refs/heads/master'
+        uses: einaregilsson/beanstalk-deploy@v4
+        with:
+          aws_access_key: ${{secrets.PROD_AWS_ACCESS_KEY}}
+          aws_secret_key: ${{secrets.PROD_AWS_SECRET_KEY}}
+          application_name: 'SG Care'
+          environment_name: 'SgCares-production'
+          region: 'ap-southeast-1'
+          deployment_package: deploy.zip
 
       - name: Deployed successfully!
         run: echo App deployed to ELB
