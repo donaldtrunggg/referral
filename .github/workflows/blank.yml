@@ -1,0 +1,167 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+#env:
+#  - NODE_ENV=test
+#  - MYSQL_HOST=localhost
+#  - MYSQL_PORT=3306
+#  - MYSQL_USERNAME=root
+#  - MYSQL_PASSWORD=
+#  - MYSQL_DBNAME=sgcares_dev
+#  - MYSQL_ENGINE=InnoDB
+#  - MYSQL_CHARSET=utf8mb4
+#  - MYSQL_COLLATE=utf8mb4_unicode_ci
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+#    strategy:
+#      node: 8
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test
+        ports:
+#          - 33306:3306
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+
+    strategy:
+      matrix:
+        node-version: [8]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: npm run build --if-present
+      - run: npm test
+        env:
+          CI: true
+          NODE_ENV: test
+          MYSQL_HOST: localhost
+          MYSQL_PORT: 3306
+          MYSQL_USERNAME: root
+          MYSQL_PASSWORD: ''
+          MYSQL_DBNAME: sgcares_dev
+          MYSQL_ENGINE: InnoDB
+          MYSQL_CHARSET: utf8mb4
+          MYSQL_COLLATE: utf8mb4_unicode_ci
+
+
+      - name: Generate deployment package
+        run: zip -r deploy.zip * -x "**node_modules**"
+
+      - name: Get timestamp
+        uses: gerred/actions/current-time@master
+        id: current-time
+
+      - name: Run string replace
+        uses: frabert/replace-string-action@master
+        id: format-time
+        with:
+          pattern: '[:\.]+'
+          string: "${{ steps.current-time.outputs.time }}"
+          replace-with: '-'
+          flags: 'g'
+
+#      - name: Beanstalk Deploy my app
+#        uses: einaregilsson/beanstalk-deploy@v4
+#        with:
+#          aws_access_key: ${{secrets.AWS_ACCESS_KEY}}
+#          aws_secret_key: ${{secrets.AWS_SECRET_KEY}}
+#          application_name: <app-name>
+#          environment_name: <beanstalk-env-name>
+#          region: <aws_region>
+#          version_label: "sgcare-${{ steps.format-time.outputs.replaced }}" // Using timestamp create on step #
+#          deployment_package: deploy.zip
+
+      - name: Deployed successfully!
+        run: echo App deployed to ELB
+    # Steps represent a sequence of tasks that will be executed as part of the job
+#    steps:
+#      # Configures the node version used on GitHub-hosted runners
+#      - uses: actions/setup-node@v1
+#        with:
+#          # The Node.js version to configure
+#          node-version: 8
+#
+#      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#      - uses: actions/checkout@v2
+#
+#      # Runs a single command using the runners shell
+#      - name: Run a one-line script
+#        run: echo Hello, world!
+#
+#      # Runs a set of commands using the runners shell
+#      - name: Run a multi-line script
+#        run: |
+#          echo Add other actions to build,
+#          echo test, and deploy your project.
+#
+#      - name: Cache node modules
+#        uses: actions/cache@v1
+#        with:
+#          path: ~/.npm
+#          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+#          restore-keys: |
+#            ${{ runner.os }}-node-
+#
+#      - name: Node ${{ matrix.node-version }}
+#        uses: actions/setup-node@v1
+#        with:
+#          node-version: ${{ matrix.node-version }}
+#
+#      - name: Installing NPM
+#        run: npm install
+#
+#      - name: Building application
+#        run: npm run build
+#
+#      - name: Generate deployment package
+#        run: zip -r deploy.zip * -x "**node_modules**"
+#
+#      - name: Get timestamp
+#        uses: gerred/actions/current-time@master
+#        id: current-time
+#
+#      - name: Run string replace
+#        uses: frabert/replace-string-action@master
+#        id: format-time
+#        with:
+#          pattern: '[:\.]+'
+#          string: "${{ steps.current-time.outputs.time }}"
+#          replace-with: '-'
+#          flags: 'g'
+#
+#      - name: Beanstalk Deploy my app
+#        uses: einaregilsson/beanstalk-deploy@v4
+#        with:
+#          aws_access_key: ${{secrets.AWS_ACCESS_KEY}}
+#          aws_secret_key: ${{secrets.AWS_SECRET_KEY}}
+#          application_name: <app-name>
+#          environment_name: <beanstalk-env-name>
+#          region: <aws_region>
+#          version_label: "my-app-${{ steps.format-time.outputs.replaced }}" // Using timestamp create on step #
+#          deployment_package: deploy.zip
+#
+#      - name: Deployed successfully!
+#        run: echo App deployed to ELB
