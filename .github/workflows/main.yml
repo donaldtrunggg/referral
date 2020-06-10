@@ -44,7 +44,7 @@ jobs:
 
       - name: Echo test
         run: echo ${DB_CONNECTION}
-        - 
+        
       - run: mysql -e "CREATE DATABASE IF NOT EXISTS ${MYSQL_DBNAME} CHARACTER SET ${MYSQL_CHARSET} COLLATE ${MYSQL_COLLATE};"
       - run: npm run db:migrate:downall
       - run: npm run db:migrate:up
