@@ -58,8 +58,8 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: db_test
+          MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+          MYSQL_DATABASE: $MYSQL_DATABASE
         ports:
           - 8888:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -77,7 +77,7 @@ jobs:
       - name: Migrate Database
         run: |
           sudo service mysql start
-          mysql -h 127.0.0.1 --port 8888 -u root -ppassword -e 'CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;'
+          mysql -h $MYSQL_HOST --port 8888 -u root -ppassword -e 'CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;'
           npm run db:migrate:downall
           npm run db:migrate:up
 
