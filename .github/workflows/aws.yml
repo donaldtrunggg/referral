@@ -51,11 +51,10 @@ jobs:
       - run: npm install
 
       - name: Migrate Database
-        run: |
-          sudo service mysql restart 
-         | mysql -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE CHARACTER SET $MYSQL_CHARSET COLLATE $MYSQL_COLLATE;"
-         | npm run db:migrate:downall
-         | npm run db:migrate:up
+        run: sudo service mysql restart
+#         | mysql -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE CHARACTER SET $MYSQL_CHARSET COLLATE $MYSQL_COLLATE;"
+#         | npm run db:migrate:downall
+#         | npm run db:migrate:up
 
       - run: npm run build --if-present
       - name: Execute test
