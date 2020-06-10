@@ -34,10 +34,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - run: |  
-      -   sudo service mysql start
-          npm run db:migrate:downall
-          npm run db:migrate:up
+      - run: sudo service mysql start
+#          npm run db:migrate:downall
+#          npm run db:migrate:up
 
       - run: npm install
       - name: Prepare env
