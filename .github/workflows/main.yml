@@ -34,7 +34,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - run: mysql -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DBNAME CHARACTER SET $MYSQL_CHARSET COLLATE $MYSQL_COLLATE;"
+      - run: mysql -e "CREATE DATABASE IF NOT EXISTS sgcares_dev CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
       - run: npm run db:migrate:downall
       - run: npm run db:migrate:up
 
