@@ -15,8 +15,8 @@ env:
   MYSQL_HOST: localhost
   MYSQL_PORT: 33306
   MYSQL_USERNAME: root
-  MYSQL_PASSWORD: password
-  MYSQL_DBNAME: db_test
+  MYSQL_ROOT_PASSWORD: password
+  MYSQL_DATABASE: db_test
   MYSQL_ENGINE: InnoDB
   MYSQL_CHARSET: utf8mb4
   MYSQL_COLLATE: utf8mb4_unicode_ci
@@ -38,7 +38,7 @@ jobs:
     steps:
       - name: Execute test
         run: echo $DB_CONNECTION
-          
+
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -55,7 +55,7 @@ jobs:
 
       - name: Migrate Database
         run: |
-         mysql -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DBNAME CHARACTER SET $MYSQL_CHARSET COLLATE $MYSQL_COLLATE;"
+         mysql -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE CHARACTER SET $MYSQL_CHARSET COLLATE $MYSQL_COLLATE;"
          | npm run db:migrate:downall
          | npm run db:migrate:up
 
