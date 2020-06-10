@@ -34,10 +34,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - run: mysql -e "CREATE DATABASE IF NOT EXISTS sgcares_dev CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-
-      - run: npm run db:migrate:downall
-      - run: npm run db:migrate:up
+      - run: |
+          sudo /etc/init.d/mysql start
+          npm run db:migrate:downall
+          npm run db:migrate:up
 
       - run: npm install
       - name: Prepare env
