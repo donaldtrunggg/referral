@@ -1,9 +1,5 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   push:
     branches: [ master, develop ]
@@ -20,24 +16,38 @@ env:
   MYSQL_ENGINE: InnoDB
   MYSQL_CHARSET: utf8mb4
   MYSQL_COLLATE: utf8mb4_unicode_ci
+  API_KEY: 630239CC130E1A7FD81A27B140976EAF437D05B5
+  COOKIE_SECRET_PASSWORD: 9B7UJszYjQ29K2LVOSM6zpOnBV459B7UJszYjQ29K2LVOSM6zpOnBV45
+  COOKIE_TTL: 1800000
+  COOKIE_IS_SECURE: false
+  COOKIE_IS_HTTP_ONLY: false
+  ALGOLIA_APPLICATION_ID: ZIWS65EYMJ
+  ALGOLIA_ADMIN_API_KEY: ed25d2393118daed7c8f296107330ac6
+  ALGOLIA_SEARCH_ONLY_API_KEY: e52ea6a37d010ab44711ba3b747096e5
+  ALGOLIA_MIXED_CONTENT_INDEX: mixed_content
+  RECOVERY_TOKEN_LIFE_TIME: 86400000
+  BASE_URL: https://sgcares.com
+  CACHE_REDIS_NAME: redisCache
+  CACHE_REDIS_HOST: 127.0.0.1
+  CACHE_REDIS_POST: 6379
+  CACHE_REDIS_PREFIX: sgcares-cache
+  PROXY_COUNT: 0
+  IP_WHITELIST_PROXY_COUNT: 0
+  SESSION_CACHE_NAME: redisCache
+  SESSION_TTL: 172800000
+  FIREBASE_DYNAMIC_LINK_API_KEY: JdfenfAdflajsdEIAO12312-B2o7KOPAJhQvQ9OA
+  ANDROID_PACKAGE_NAME: some.android.package
+  IOS_BUNDLE_ID: some.ios.bundle
+  DYNAMIC_LINK_REDIRECT_URL: https://itunes.apple.com
+  QR_CODE_IMAGE_TYPE: png
+  GIVING_SG_API_KEY: 1wz811wz81hd35hhd35h
+  GIVING_SG_API_URL: https://dev-api.giving.sg/v1/
+  GIVING_SG_API_TIMEOUT: 10000
+  GIVING_SG_FEED_STORY_PER_PAGE: 4
+  GIVING_SG_FEED_ITEM_PER_PAGE: 7
+  GIVING_SG_FEED_EXTERNAL_DATA_PER_PAGE: 1
 
 jobs:
-#  test-host:
-#    runs-on: ubuntu-latest
-#    services:
-#      mysql:
-#        image: mysql:5.7
-#        env:
-#          MYSQL_ROOT_PASSWORD: password
-#        ports:
-#          - 32574:3306
-#        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-#    steps:
-#      - name: Verify MySQL connection from host
-#        run: |
-#          sudo apt-get install -y mysql-client
-#          mysql --host 127.0.0.1 --port 32574 -uroot -ppassword -e "SHOW DATABASES"
-
   build:
     strategy:
       matrix:
@@ -55,27 +65,27 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      - name: Execute test
-        run: echo $DB_CONNECTION
-
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
 
-      - run: npm install
+      - name: Install NPM
+        run: npm install
 
       - name: Migrate Database
         run: |
           sudo service mysql start
-          mysql -h 127.0.0.1 --port 8888 -u root -ppassword -e 'CREATE DATABASE IF NOT EXISTS test;'
+          mysql -h 127.0.0.1 --port 8888 -u root -ppassword -e 'CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;'
           npm run db:migrate:downall
           npm run db:migrate:up
 
-      - run: npm run build --if-present
+      - name: Build
+        run: npm run build --if-present
+
       - name: Execute test
-        run: echo $DB_CONNECTION
+        run: npm test
 
 
       - name: Generate deployment package
