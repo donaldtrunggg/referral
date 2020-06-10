@@ -48,17 +48,12 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-#          npm run db:migrate:downall
-#          npm run db:migrate:up
-
       - run: npm install
-      - name: Prepare env
-        run: |
-          cp .env.test.ci .env
 
       - name: Migrate Database
         run: |
-         mysql -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE CHARACTER SET $MYSQL_CHARSET COLLATE $MYSQL_COLLATE;"
+          sudo service mysql restart 
+         | mysql -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE CHARACTER SET $MYSQL_CHARSET COLLATE $MYSQL_COLLATE;"
          | npm run db:migrate:downall
          | npm run db:migrate:up
 
