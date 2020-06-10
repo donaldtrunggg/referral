@@ -111,6 +111,19 @@ jobs:
         with:
           name: files
 
+      - name: Get timestamp
+        uses: gerred/actions/current-time@master
+        id: current-time
+
+      - name: Run string replace
+        uses: frabert/replace-string-action@master
+        id: format-time
+        with:
+          pattern: '[:\.]+'
+          string: "${{ steps.current-time.outputs.time }}"
+          replace-with: '-'
+          flags: 'g'
+
       - name: Deploy staging
         if: github.ref == 'refs/heads/develop'
         uses: einaregilsson/beanstalk-deploy@v4
@@ -120,6 +133,7 @@ jobs:
           application_name: 'SG Care'
           environment_name: ${{secrets.STAGING_AWS_BUCKET_NAME}}
           region: 'ap-southeast-1'
+          version_label: 'devt_${{ steps.format-time.outputs.replaced }}'
           deployment_package: files/deploy.zip
 
       - name: Deployed staging successfully!
@@ -138,6 +152,19 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: files
+          
+      - name: Get timestamp
+        uses: gerred/actions/current-time@master
+        id: current-time
+
+      - name: Run string replace
+        uses: frabert/replace-string-action@master
+        id: format-time
+        with:
+          pattern: '[:\.]+'
+          string: "${{ steps.current-time.outputs.time }}"
+          replace-with: '-'
+          flags: 'g'
 
       - name: Deploy production
         if: github.ref == 'refs/heads/master'
@@ -148,6 +175,7 @@ jobs:
           application_name: 'SG Care'
           environment_name: ${{secrets.PROD_AWS_BUCKET_NAME}}
           region: 'ap-southeast-1'
+          version_label: 'prod_${{ steps.format-time.outputs.replaced }}'
           deployment_package: files/deploy.zip
 
       - name: Deployed production successfully!
