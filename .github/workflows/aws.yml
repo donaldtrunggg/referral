@@ -13,7 +13,7 @@ on:
 env:
   DB_CONNECTION: mysql
   MYSQL_HOST: localhost
-  MYSQL_PORT: 3306
+  MYSQL_PORT: 33306
   MYSQL_USERNAME: root
   MYSQL_PASSWORD: password
   MYSQL_DBNAME: db_test
@@ -36,6 +36,9 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
+      - name: Execute test
+        run: echo $DB_CONNECTION
+          
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
