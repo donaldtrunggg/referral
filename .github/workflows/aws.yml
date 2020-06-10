@@ -68,9 +68,8 @@ jobs:
 
       - name: Migrate Database
         run: |
-          sudo service mysql start;
+          sudo service mysql start
           sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
-#          sudo service mysql restart
           mysql -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE CHARACTER SET $MYSQL_CHARSET COLLATE $MYSQL_COLLATE;"
           npm run db:migrate:downall
           npm run db:migrate:up
