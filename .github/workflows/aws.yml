@@ -76,10 +76,7 @@ jobs:
       - name: Migrate Database
         run: |
           sudo service mysql start
-#          sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
           mysql -h 127.0.0.1 --port 8888 -u root -ppassword -e 'CREATE DATABASE IF NOT EXISTS $MYSQL_DBNAME;'
-#          npm run db:migrate:downall
-#          npm run db:migrate:up
 
       - name: Build
         run: npm run build --if-present
