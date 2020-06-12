@@ -74,6 +74,8 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
+      
+      - run: echo ${GITHUB_SHA::8}
         
       - name: Install NPM
         run: npm install
