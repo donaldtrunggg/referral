@@ -70,6 +70,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name : GITHUB CONTEXT
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+        
       - name: Install NPM
         run: npm install
 
