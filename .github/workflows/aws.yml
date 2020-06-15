@@ -151,7 +151,7 @@ jobs:
         run: |
           aws s3 cp files/deploy.zip s3://$BUCKET_NAME/$FILE_NAME
           aws elasticbeanstalk create-application-version --application-name $APPLICATION_NAME --version-label $VERSION_LABEL --source-bundle S3Bucket=$BUCKET_NAME,S3Key=$FILE_NAME
-          aws elasticbeanstalk update-environment --application-name $APPLICATION_NAME --environment-name $ENVIROMENT_NAME --version-label $VERSION_LABEL
+          aws elasticbeanstalk update-environment --application-name [$APPLICATION_NAME] --environment-name $ENVIROMENT_NAME --version-label $VERSION_LABEL
       env:
           BUCKET_NAME: elasticbeanstalk-ap-southeast-1-381272808937
           VERSION_LABEL: prod_${{ needs.build.outputs.shortSHA }}
