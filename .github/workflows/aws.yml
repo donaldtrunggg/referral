@@ -89,7 +89,6 @@ jobs:
           mysql -h 127.0.0.1 --port 8888 -u root -ppassword -e 'CREATE DATABASE IF NOT EXISTS $MYSQL_DBNAME;'
           npm run db:migrate:downall
           npm run db:migrate:up
-
       - name: Build
         run: npm run build --if-present
 
@@ -143,7 +142,7 @@ jobs:
           BUCKET_NAME: elasticbeanstalk-ap-southeast-1-381272808937
           VERSION_LABEL: devt_${{ needs.build.outputs.shortSHA }}
           FILE_NAME: devt_${{ needs.build.outputs.shortSHA }}.zip
-          APPLICATION_NAME: SG Cares
+          APPLICATION_NAME: "SG Cares"
           ENVIROMENT_NAME: SgCares-staging
 
       - name: --PRODUCTION-- Deploy to S3 & Elastic Beanstalk
@@ -152,11 +151,11 @@ jobs:
           aws s3 cp files/deploy.zip s3://$BUCKET_NAME/$FILE_NAME
           aws elasticbeanstalk create-application-version --application-name $APPLICATION_NAME --version-label $VERSION_LABEL --source-bundle S3Bucket=$BUCKET_NAME,S3Key=$FILE_NAME
           aws elasticbeanstalk update-environment --application-name $APPLICATION_NAME --environment-name $ENVIROMENT_NAME --version-label $VERSION_LABEL
-      env:
+        env:
           BUCKET_NAME: elasticbeanstalk-ap-southeast-1-381272808937
           VERSION_LABEL: prod_${{ needs.build.outputs.shortSHA }}
           FILE_NAME: prod_${{ needs.build.outputs.shortSHA }}.zip
-          APPLICATION_NAME: SG Cares
+          APPLICATION_NAME: "SG Cares"
           ENVIROMENT_NAME: SgCares-production
 
       - name: Deployed successfully!
