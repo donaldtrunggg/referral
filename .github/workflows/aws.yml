@@ -73,6 +73,9 @@ jobs:
         ports:
           - 6379:6379
 
+    outputs:
+      shortSHA: ${{ steps.getShortSHA.outputs.result }}
+
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -83,18 +86,18 @@ jobs:
       - name: Install NPM
         run: npm install
 
-#       - name: Migrate Database
-#         run: |
-#           sudo service mysql start
-#           mysql -h 127.0.0.1 --port 8888 -u root -ppassword -e 'CREATE DATABASE IF NOT EXISTS $MYSQL_DBNAME;'
-#           npm run db:migrate:downall
-#           npm run db:migrate:up
+#      - name: Migrate Database
+#        run: |
+#          sudo service mysql start
+#          mysql -h 127.0.0.1 --port 8888 -u root -ppassword -e 'CREATE DATABASE IF NOT EXISTS $MYSQL_DBNAME;'
+#          npm run db:migrate:downall
+#          npm run db:migrate:up
 
-#       - name: Build
-#         run: npm run build --if-present
+      - name: Build
+        run: npm run build --if-present
 
-#       - name: Execute test
-#         run: npm test
+#      - name: Execute test
+#        run: npm test
 
 
       - name: Generate deployment package
@@ -107,8 +110,8 @@ jobs:
           name: files
           path: deploy.zip
 
-      - id: getShaFilename
-        run: echo "::set-output name=filename::${GITHUB_SHA::7}"
+      - id: getShortSHA
+        run: echo "::set-output name=result::${GITHUB_SHA::7}"
 
   publish_staging:
     needs: [build]
@@ -118,9 +121,6 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - id: getFilename
-        run: echo "::set-output name=filename::"
-
       - uses: actions/checkout@v2
       - name: Download file from step building
         uses: actions/download-artifact@v1
@@ -128,7 +128,7 @@ jobs:
           name: files
 
       - name: Rename file
-        run: rename deploy.zip devt_${{ steps.getShaFilename.outputs.filename }}
+        run: rename deploy.zip devt_${{ needs.build.outputs.shortSHA }}
 
       - name: Deploy staging
         if: github.ref == 'refs/heads/develop'
@@ -160,7 +160,7 @@ jobs:
           name: files
 
       - name: Rename file
-        run: rename deploy.zip prod_${{ steps.getShaFilename.outputs.filename }}
+        run: rename deploy.zip prod_${{ needs.build.outputs.shortSHA }}
 
       - name: Deploy production
         if: github.ref == 'refs/heads/master'
