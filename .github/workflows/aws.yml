@@ -82,7 +82,7 @@ jobs:
 
       - name: Install NPM
         run: npm install
-      - run: echo $github
+#       - run: echo $github
 #       - name: Migrate Database
 #         run: |
 #           sudo service mysql start
