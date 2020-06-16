@@ -104,7 +104,7 @@ jobs:
         with:
           name: files
           path: deploy.zip
-
+      - run: echo $GITHUB_CONTEXT
       - id: getShortSHA
         run: echo "::set-output name=result::${GITHUB_SHA::7}"
 
