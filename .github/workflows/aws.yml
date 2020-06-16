@@ -105,9 +105,7 @@ jobs:
           name: files
           path: deploy.zip
       - name : GITHUB CONTEXT
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "${{ github.ref.head_commit.message }}"
+        run: echo "${ github.ref.head_commit.message }"
       - id: getShortSHA
         run: echo "::set-output name=result::${GITHUB_SHA::7}"
 
