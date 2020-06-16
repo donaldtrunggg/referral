@@ -107,7 +107,7 @@ jobs:
       - name : GITHUB CONTEXT
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
+        run: echo "${{ github.ref.head_commit.message }}"
       - id: getShortSHA
         run: echo "::set-output name=result::${GITHUB_SHA::7}"
 
